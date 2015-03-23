@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      var WINDOWS_KEY = 'windows';
+      var WINDOW_PREFIX = 'window:';
+
+      function showOverview() {
+        // var newTab = safari.application.activeBrowserWindow.activeTab();
+        // newTab.url = "http://something"
+      }
+
+      function restoreWindow(window) {
+        window.tabs.forEach(restoreTab);
+      }
+
+      function restoreTab(tab) {
+        var newTab = safari.application.activeBrowserWindow.openTab();
+        newTab.url = tab.url;
+      }
+
+      function stashAllTabs() {
+        var activeWindow = safari.application.activeBrowserWindow;
+        var tabs = activeWindow.tabs.reverse().map(tabData);
+
+        var window = {
+          id: generateId(),
+          tabs: tabs,
+          createdAt: new Date()
+        };
+
+        localStorage[WINDOW_PREFIX+window.id] = JSON.stringify(window);
+        addWindowToWindowList(window);
+      }
+
+      function addWindowToWindowList(window) {
+        var list = JSON.parse(localStorage[WINDOWS_KEY] || '[]');
+        list.unshift(window.id);
+        localStorage[WINDOWS_KEY] = JSON.stringify(list);
+      }
+
+      function tabData(tab) {
+        return {id: generateId(), title: tab.title, url: tab.url};
+      }
+
+      function generateId() {
+          return Math.random().toString(36).substring(2, 15) +
+              Math.random().toString(36).substring(2, 15);
+      }
+
+      safari.application.addEventListener("command", function(event) {
+        if (event.command === "stash-all-tabs") {
+          stashAllTabs();
+        }
+      }, false);
+
+      safari.application.addEventListener("validate", function(event) {
+        // we should disable the button if there are no stashable tabs open
+      }, false);
+
+    </script>
+  </head>
+
+  <body></body>
+</html>
