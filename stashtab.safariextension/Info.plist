@@ -22,19 +22,55 @@
 		<real>5242880</real>
 		<key>Global Page</key>
 		<string>global.html</string>
+		<key>Menus</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>menu</string>
+				<key>Menu Items</key>
+				<array>
+					<dict>
+						<key>Identifier</key>
+						<string>stash-this-tab</string>
+						<key>Title</key>
+						<string>Stash this tab</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>stash-all-other</string>
+						<key>Title</key>
+						<string>Stash all other tabs</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>stash-all-tabs</string>
+						<key>Title</key>
+						<string>Stash all tabs</string>
+					</dict>
+					<dict>
+						<key>Identifier</key>
+						<string>open-overview</string>
+						<key>Title</key>
+						<string>Open stash overview</string>
+					</dict>
+				</array>
+			</dict>
+		</array>
 		<key>Toolbar Items</key>
 		<array>
 			<dict>
 				<key>Command</key>
 				<string>stash-all-tabs</string>
 				<key>Identifier</key>
-				<string>de.co.with.fun.stashtab.toolbar</string>
+				<string>toolbar</string>
 				<key>Image</key>
-				<string>toolbar.png</string>
+				<string>toolbar-in.png</string>
 				<key>Include By Default</key>
 				<true/>
 				<key>Label</key>
 				<string>StashTab</string>
+				<key>Menu</key>
+				<string>menu</string>
 				<key>Palette Label</key>
 				<string>Stash all tabs</string>
 				<key>Tool Tip</key>

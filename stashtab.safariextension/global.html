@@ -7,9 +7,14 @@
       var WINDOWS_KEY = 'windows';
       var WINDOW_PREFIX = 'window:';
 
-      function showOverview() {
-        // var newTab = safari.application.activeBrowserWindow.activeTab();
-        // newTab.url = "http://something"
+      var COMMANDS = {
+        'stash-all-tabs': stashAllTabs,
+        'open-overview': openOverview
+      }
+
+      function openOverview() {
+        var newTab = safari.application.activeBrowserWindow.activeTab;
+        newTab.url = safari.extension.baseURI + "overview.html"
       }
 
       function restoreWindow(window) {
@@ -51,13 +56,27 @@
       }
 
       safari.application.addEventListener("command", function(event) {
-        if (event.command === "stash-all-tabs") {
-          stashAllTabs();
-        }
+        var fn = COMMANDS[event.command];
+        fn && fn(event);
       }, false);
 
       safari.application.addEventListener("validate", function(event) {
-        // we should disable the button if there are no stashable tabs open
+        var toolbarItem = event.target;
+        if (!toolbarItem.browserWindow) { return; }
+
+        var canStash = toolbarItem.browserWindow.tabs.some(function(tab) {
+          return !!tab.url;
+        });
+
+        if (canStash) {
+          toolbarItem.command = 'stash-all-tabs';
+          toolbarItem.image = safari.extension.baseURI + 'toolbar-in.png';
+          toolbarItem.tooltip = 'Stash all tabs';
+        } else {
+          toolbarItem.command = 'open-overview';
+          toolbarItem.image = safari.extension.baseURI + 'toolbar-out.png';
+          toolbarItem.tooltip = 'Open stash overview';
+        }
       }, false);
 
     </script>
