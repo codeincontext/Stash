@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <style type="text/css" media="screen">
+      ul, li {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <div class='js-container'></div>
+
+    <script id='overview-template' type='text/ractive'>
+      {{#stashes}}
+        <stash />
+      {{/stashes}}
+    </script>
+
+    <script id='stash-template' type='text/ractive'>
+      {{tabs.length}} tabs stashed on {{date}}. <a href="#" on-click='restoreAll'>Restore all</a>. (<a href="#" on-click='delete'>x</a>).
+      <ul>
+        {{#tabs}}
+          <tab />
+        {{/tabs}}
+      </ul>
+    </script>
+
+    <script id='tab-template' type='text/ractive'>
+      <li on-click='restore'>{{title}}(<a href="#" on-click='remove'>X</a>)</li>
+    </script>
+
+    <script src='http://cdn.ractivejs.org/latest/ractive.js'></script>
+    <script src='scripts/overview.js'></script>
+  </body>
+</html>

@@ -7,9 +7,9 @@
 	<key>Builder Version</key>
 	<string>10600.3.18</string>
 	<key>CFBundleDisplayName</key>
-	<string>stashtab</string>
+	<string>Stash</string>
 	<key>CFBundleIdentifier</key>
-	<string>de.co.with.fun.stashtab</string>
+	<string>de.co.with.fun.stash</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
@@ -56,6 +56,19 @@
 				</array>
 			</dict>
 		</array>
+		<key>Popovers</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>overview.html</string>
+				<key>Height</key>
+				<real>400</real>
+				<key>Identifier</key>
+				<string>overview</string>
+				<key>Width</key>
+				<real>400</real>
+			</dict>
+		</array>
 		<key>Toolbar Items</key>
 		<array>
 			<dict>
@@ -68,11 +81,13 @@
 				<key>Include By Default</key>
 				<true/>
 				<key>Label</key>
-				<string>StashTab</string>
+				<string>Stash</string>
 				<key>Menu</key>
 				<string>menu</string>
 				<key>Palette Label</key>
 				<string>Stash all tabs</string>
+				<key>Popover</key>
+				<string>overview</string>
 				<key>Tool Tip</key>
 				<string>Stash all tabs</string>
 			</dict>
