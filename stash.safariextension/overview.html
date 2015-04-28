@@ -22,7 +22,7 @@
     </script>
 
     <script id='stash-template' type='text/ractive'>
-      {{tabs.length}} tabs stashed on {{date}}. <a href="#" on-click='restoreAll'>Restore all</a>. (<a href="#" on-click='delete'>x</a>).
+      {{tabs.length}} tabs stashed on {{date}}. <a href="#" on-click='restore'>Restore all</a>. (<a href="#" on-click='remove'>x</a>).
       <ul>
         {{#tabs}}
           <tab />

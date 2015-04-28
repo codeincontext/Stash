@@ -1,15 +1,20 @@
 var global = safari.extension.globalPage.contentWindow;
+function sendCmd(type, data) {
+  // wouldn't have to mutate with immutablejs
+  data.type = type;
+  global.postMessage(data, window.location.origin);
+}
 
 Ractive.components.stash = Ractive.extend({
   template: '#stash-template',
   init: function (options) {
     this.on({
-      restoreAll: function(e) {
-        global.postMessage({
-          type: 'restoreStash',
-          stashId: this.get('id')
-        }, window.location.origin);
-
+      restore: function(e) {
+        sendCmd('restoreStash', {stashId: this.get('id')});
+        e.original.preventDefault();
+      },
+      remove: function(e) {
+        sendCmd('removeStash', {stashId: this.get('id')});
         e.original.preventDefault();
       }
     });
@@ -19,6 +24,18 @@ Ractive.components.stash = Ractive.extend({
 
 Ractive.components.tab = Ractive.extend({
   template: '#tab-template',
+  init: function (options) {
+    this.on({
+      restore: function(e) {
+        sendCmd('restoreTab', {stashId: this.get('stashId'), tabId: this.get('id')});
+        e.original.preventDefault();
+      },
+      remove: function(e) {
+        sendCmd('removeTab', {stashId: this.get('stashId'), tabId: this.get('id')});
+        e.original.preventDefault();
+      }
+    });
+  },
   twoway: false
 });
 

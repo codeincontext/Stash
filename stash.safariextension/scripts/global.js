@@ -18,7 +18,7 @@ function openOverview(event) {
 function restoreStash(stash) {
   if (!stash.id) { stash = getStash(stash); }
   stash.tabs.forEach(restoreTab);
-  deleteStash(stash);
+  removeStash(stash);
 }
 
 function restoreTab(tab) {
@@ -26,10 +26,10 @@ function restoreTab(tab) {
   newTab.url = tab.url;
 }
 
-function stashAllTabs() {
-  var activeWindow = safari.application.activeBrowserWindow;
+function stashAllTabs(event) {
+  var activeWindow = event.target.browserWindow;
   var tabs = activeWindow.tabs
-                          .filter(function(t) { return t.id; })
+                          .filter(function(t) { return t.url; })
                           .reverse()
                           .map(tabData);
 
@@ -40,6 +40,8 @@ function stashAllTabs() {
   };
 
   saveStash(stash);
+  // little indication of where the tabs went or way to use them after
+  activeWindow.close();
 }
 
 function saveStash(stash) {
@@ -54,13 +56,17 @@ function getStash(id) {
   return JSON.parse(localStorage[STASH_PREFIX+id]);
 }
 
-function deleteStash(stash) {
+function removeStash(stash) {
   var id = stash.id || stash;
   delete localStorage[STASH_PREFIX+id];
 
   var stashIds = JSON.parse(localStorage[STASHES_KEY]);
   stashIds.splice(stashIds.indexOf(id), 1);
   localStorage[STASHES_KEY] = JSON.stringify(stashIds);
+}
+
+function restoreTabFromStash() {
+
 }
 
 function tabData(tab) {
@@ -115,5 +121,11 @@ window.addEventListener("message", function(event) {
 
   if (event.data.type === 'restoreStash') {
     restoreStash(event.data.stashId);
+  } else if (event.data.type === 'removeStash') {
+    removeStash(event.data.stashId);
+  } else if (event.data.type === 'restoreTab') {
+    restoreTabFromStash(event.data.stashId, event.data.tabId);
+  } else if (event.data.type === 'removeTab') {
+    removeTabFromStash(event.data.stashId, event.data.tabId);
   }
 }, false);
