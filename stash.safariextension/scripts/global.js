@@ -11,8 +11,6 @@ var COMMANDS = {
 
 function openOverview(event) {
   event.target.showPopover();
-  // var newTab = safari.application.activeBrowserWindow.activeTab;
-  // newTab.url = safari.extension.baseURI + "overview.html"
 }
 
 function restoreStash(stash) {
@@ -90,24 +88,39 @@ safari.application.addEventListener("command", function(event) {
   fn && fn(event);
 }, false);
 
+// this gets called a lot, including any time a tab loads (which is 40 times if you've just restored 40 tabs)
 safari.application.addEventListener("validate", function(event) {
-  var toolbarItem = event.target;
-  if (!toolbarItem.browserWindow) { return; }
+  if (event.target.identifier === 'toolbar') {
+    updateToolbarItem(event.target);
+  }
+}, false);
 
-  var canStash = toolbarItem.browserWindow.tabs.some(function(tab) {
+function updateToolbarItem(item) {
+  if (!item.browserWindow && !item.browserWindow.tabs) {
+    console.log('no tabs (if this never happens, remove this clause)')
+    return;
+  }
+
+  var canStash = item.browserWindow.tabs.some(function(tab) {
     return !!tab.url;
   });
 
-  if (canStash) {
-    toolbarItem.command = 'stash-all-tabs';
-    toolbarItem.image = safari.extension.baseURI + 'toolbar-in.png';
-    toolbarItem.tooltip = 'Stash all tabs';
-  } else {
-    toolbarItem.command = null; // show popover
-    toolbarItem.image = safari.extension.baseURI + 'toolbar-out.png';
-    toolbarItem.tooltip = 'Open stash overview';
+  // don't change if it doesn't need changing (mutating an object we don't own :/)
+  if (canStash === item.canStash) {
+    return;
   }
-}, false);
+
+  if (canStash) {
+    item.command = 'stash-all-tabs';
+    item.image = safari.extension.baseURI + 'toolbar-in.png';
+    item.tooltip = 'Stash all tabs';
+  } else {
+    item.command = 'open-overview';
+    item.image = safari.extension.baseURI + 'toolbar-out.png';
+    item.tooltip = 'Open stash overview';
+  }
+  item.canStash = canStash;
+}
 
 safari.application.addEventListener("popover", function(e) {
   var message = {type: 'updateStashes', stashes: getAllStashes()};
